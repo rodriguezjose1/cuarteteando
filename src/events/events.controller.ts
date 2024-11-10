@@ -9,12 +9,28 @@ import {
 } from '@nestjs/common';
 import { EventEntity } from './events.entity';
 import { EventsService } from './events.service';
+import { 
+  SwaggerCreateResponse,
+  SwaggerDeleteResponse,
+  SwaggerGetAllResponse,
+  SwaggerGetOneResponse,
+  SwaggerUpdateResponse 
+} from '@common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Events')
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  /**
+   * Get all events
+   *
+   * @return {*}  {Promise<{ events: EventEntity[] }>}
+   * @memberof EventsController
+   */
   @Get()
+  @SwaggerGetAllResponse('Get all events', EventEntity)
   async findAll(): Promise<{ events: EventEntity[] }> {
     const events = await this.eventsService.findAll();
 
@@ -23,7 +39,15 @@ export class EventsController {
     };
   }
 
+  /**
+   * Get an event by ID
+   *
+   * @param {string} id
+   * @return {*}  {Promise<{ event: EventEntity }>}
+   * @memberof EventsController
+   */
   @Get(':id')
+  @SwaggerGetOneResponse('Get an event by ID', EventEntity)
   async findOne(@Param('id') id: string): Promise<{ event: EventEntity }> {
     const event = await this.eventsService.findOne(+id);
     return {
@@ -31,7 +55,15 @@ export class EventsController {
     };
   }
 
+  /**
+   * Create a new event
+   *
+   * @param {Partial<EventEntity>} event
+   * @return {*}  {Promise<{ event: EventEntity }>}
+   * @memberof EventsController
+   */
   @Post()
+  @SwaggerCreateResponse('Create a new event', EventEntity)
   async create(@Body() event: Partial<EventEntity>): Promise<{ event: EventEntity }> {
     const newEvent = await this.eventsService.create(event);
     return {
@@ -39,7 +71,16 @@ export class EventsController {
     };
   }
 
+  /**
+   * Update an event
+   *
+   * @param {string} id
+   * @param {Partial<EventEntity>} event
+   * @return {*}  {Promise<{ event: EventEntity }>}
+   * @memberof EventsController
+   */
   @Put(':id')
+  @SwaggerUpdateResponse('Update an event', EventEntity)
   async update(
     @Param('id') id: string,
     @Body() event: Partial<EventEntity>,
@@ -50,7 +91,15 @@ export class EventsController {
     };
   }
 
+  /**
+   * Delete an event
+   *
+   * @param {string} id
+   * @return {*}  {Promise<void>}
+   * @memberof EventsController
+   */
   @Delete(':id')
+  @SwaggerDeleteResponse('Delete an event', EventEntity)
   remove(@Param('id') id: string): Promise<void> {
     return this.eventsService.remove(+id);
   }
