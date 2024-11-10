@@ -1,25 +1,22 @@
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventsModule } from './events/events.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigModuleOptions } from '@nestjs/config';
+import { TypeOrmModule } from './datasource/typeorm.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: 'postgresql://cuarteteando_dbs_user:MSazDlH3ysAWl21PJ4gY6GeFSTH9bz6O@dpg-csnt46i3esus73ei04v0-a.oregon-postgres.render.com/cuarteteando_dbs',
-      ssl: {
-        rejectUnauthorized: false, // Acepta el certificado SSL sin validación
-      },
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    TypeOrmModule,
     EventsModule,
+    UsersModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

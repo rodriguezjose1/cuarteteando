@@ -1,30 +1,30 @@
 // src/events/events.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Event } from 'src/entities/event.entity';
 import { Repository } from 'typeorm';
+import { EventEntity } from './events.entity';
 
 @Injectable()
 export class EventsService {
   constructor(
-    @InjectRepository(Event)
-    private eventsRepository: Repository<Event>,
+    @InjectRepository(EventEntity)
+    private eventsRepository: Repository<EventEntity>,
   ) {}
 
-  findAll(): Promise<Event[]> {
+  findAll(): Promise<EventEntity[]> {
     return this.eventsRepository.find();
   }
 
-  findOne(id: number): Promise<Event> {
+  findOne(id: number): Promise<EventEntity> {
     return this.eventsRepository.findOneBy({ id });
   }
 
-  create(event: Partial<Event>): Promise<Event> {
+  create(event: Partial<EventEntity>): Promise<EventEntity> {
     const newEvent = this.eventsRepository.create(event);
     return this.eventsRepository.save(newEvent);
   }
 
-  async update(id: number, event: Partial<Event>): Promise<Event> {
+  async update(id: number, event: Partial<EventEntity>): Promise<EventEntity> {
     await this.eventsRepository.update(id, event);
     return this.eventsRepository.findOneBy({ id });
   }

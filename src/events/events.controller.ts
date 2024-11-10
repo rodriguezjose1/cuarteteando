@@ -1,4 +1,3 @@
-// src/events/events.controller.ts
 import {
   Body,
   Controller,
@@ -8,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Event } from 'src/entities/event.entity';
+import { EventEntity } from './events.entity';
 import { EventsService } from './events.service';
 
 @Controller('events')
@@ -16,7 +15,7 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-  async findAll(): Promise<{ events: Event[] }> {
+  async findAll(): Promise<{ events: EventEntity[] }> {
     const events = await this.eventsService.findAll();
 
     return {
@@ -25,7 +24,7 @@ export class EventsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<{ event: Event }> {
+  async findOne(@Param('id') id: string): Promise<{ event: EventEntity }> {
     const event = await this.eventsService.findOne(+id);
     return {
       event,
@@ -33,7 +32,7 @@ export class EventsController {
   }
 
   @Post()
-  async create(@Body() event: Partial<Event>): Promise<{ event: Event }> {
+  async create(@Body() event: Partial<EventEntity>): Promise<{ event: EventEntity }> {
     const newEvent = await this.eventsService.create(event);
     return {
       event: newEvent,
@@ -43,8 +42,8 @@ export class EventsController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() event: Partial<Event>,
-  ): Promise<{ event: Event }> {
+    @Body() event: Partial<EventEntity>,
+  ): Promise<{ event: EventEntity }> {
     const eventUpdated = await this.eventsService.update(+id, event);
     return {
       event: eventUpdated,
