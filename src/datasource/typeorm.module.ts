@@ -1,29 +1,31 @@
 import { DataSource } from 'typeorm';
 import { Global, Module } from '@nestjs/common';
+import { LoggerService } from '@common/logger/logger.service';
 
-@Global() // makes the module available globally for other modules once imported in the app modules
+@Global() 
 @Module({
   imports: [],
   providers: [
+    LoggerService,
     {
       provide: DataSource, 
-      inject: [],
-      useFactory: async () => {
+      inject: [LoggerService],
+      useFactory: async (logger: LoggerService) => {
+        logger.setContext('TypeOrmModule');
         try {
           const dataSource = new DataSource({
             type: 'postgres',
             url: process.env.DATABASE_URL,
-            synchronize: true,
             ssl: {
               rejectUnauthorized: false
             },
             entities: [`${__dirname}/../**/**.entity{.ts,.js}`]
           });
           await dataSource.initialize(); 
-          console.log('Database connected successfully');
+          logger.info('Database connected successfully');
           return dataSource;
         } catch (error) {
-          console.log('Error connecting to database');
+          logger.error('Error connecting to database', error.stack);
           throw error;
         }
       },

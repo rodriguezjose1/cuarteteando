@@ -17,11 +17,15 @@ import {
   SwaggerUpdateResponse 
 } from '@common/decorators';
 import { ApiTags } from '@nestjs/swagger';
+import { LoggerService } from '@common/logger/logger.service';
 
 @ApiTags('Events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService, private readonly logger: LoggerService
+) {
+  this.logger.setContext(EventsController.name);
+}
 
   /**
    * Get all events
@@ -32,6 +36,7 @@ export class EventsController {
   @Get()
   @SwaggerGetAllResponse('Get all events', EventEntity)
   async findAll(): Promise<{ events: EventEntity[] }> {
+    this.logger.info('Getting all events');
     const events = await this.eventsService.findAll();
 
     return {
