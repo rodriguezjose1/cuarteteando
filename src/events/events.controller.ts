@@ -1,31 +1,23 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { EventEntity } from './events.entity';
-import { EventsService } from './events.service';
-import { 
   SwaggerCreateResponse,
   SwaggerDeleteResponse,
   SwaggerGetAllResponse,
   SwaggerGetOneResponse,
-  SwaggerUpdateResponse 
+  SwaggerUpdateResponse,
 } from '@common/decorators';
-import { ApiTags } from '@nestjs/swagger';
 import { LoggerService } from '@common/logger/logger.service';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
+import { EventEntity } from './events.entity';
+import { EventsService } from './events.service';
 
 @ApiTags('Events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService, private readonly logger: LoggerService
-) {
-  this.logger.setContext(EventsController.name);
-}
+  constructor(private readonly eventsService: EventsService, private readonly logger: LoggerService) {
+    this.logger.setContext(EventsController.name);
+  }
 
   /**
    * Get all events
@@ -86,10 +78,7 @@ export class EventsController {
    */
   @Put(':id')
   @SwaggerUpdateResponse('Update an event', EventEntity)
-  async update(
-    @Param('id') id: string,
-    @Body() event: Partial<EventEntity>,
-  ): Promise<{ event: EventEntity }> {
+  async update(@Param('id') id: string, @Body() event: Partial<EventEntity>): Promise<{ event: EventEntity }> {
     const eventUpdated = await this.eventsService.update(+id, event);
     return {
       event: eventUpdated,

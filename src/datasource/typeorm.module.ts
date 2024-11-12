@@ -1,14 +1,14 @@
-import { DataSource } from 'typeorm';
-import { Global, Module } from '@nestjs/common';
 import { LoggerService } from '@common/logger/logger.service';
+import { Global, Module } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 
-@Global() 
+@Global()
 @Module({
   imports: [],
   providers: [
     LoggerService,
     {
-      provide: DataSource, 
+      provide: DataSource,
       inject: [LoggerService],
       useFactory: async (logger: LoggerService) => {
         logger.setContext('TypeOrmModule');
@@ -17,11 +17,11 @@ import { LoggerService } from '@common/logger/logger.service';
             type: 'postgres',
             url: process.env.DATABASE_URL,
             ssl: {
-              rejectUnauthorized: false
+              rejectUnauthorized: false,
             },
-            entities: [`${__dirname}/../**/**.entity{.ts,.js}`]
+            entities: [`${__dirname}/../**/**.entity{.ts,.js}`],
           });
-          await dataSource.initialize(); 
+          await dataSource.initialize();
           logger.info('Database connected successfully');
           return dataSource;
         } catch (error) {

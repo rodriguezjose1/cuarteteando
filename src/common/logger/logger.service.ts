@@ -15,21 +15,16 @@ export class LoggerService {
 
     this.logger = createLogger({
       level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
-      format: combine(
-        colorize(),
-        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        myFormat
-      ),
+      format: combine(colorize(), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), myFormat),
       transports: [
         new transports.Console(),
-        ...(process.env.NODE_ENV === 'production' 
+        ...(process.env.NODE_ENV === 'production'
           ? [
               new transports.File({ filename: 'error.log', level: 'error' }),
-              new transports.File({ filename: 'combined.log' })
-            ] 
-          : []
-        )
-      ]
+              new transports.File({ filename: 'combined.log' }),
+            ]
+          : []),
+      ],
     });
   }
 

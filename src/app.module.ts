@@ -1,10 +1,11 @@
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { EventsModule } from './events/events.module';
-import { ConfigModule, ConfigModuleOptions } from '@nestjs/config';
-import { TypeOrmModule } from './datasource/typeorm.module';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from './datasource/typeorm.module';
+import { EventsModule } from './events/events.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
